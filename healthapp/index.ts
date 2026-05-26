@@ -31,27 +31,28 @@ app.post('/exercises', (req, res) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const target = req.body.target;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const rawExercises = req.body.dailyExercises;
+  const rawExercises = req.body.daily_exercises;
 
-  if (!target || isNaN(Number(target))) {
-    return res.status(400).send({ error: 'malformatted parameters' });
+  if (!target || !rawExercises) {
+    res.status(400).send({ error: 'parameters missing' });
+    return;
   }
 
-  if (!Array.isArray(rawExercises)) {
-    return res.status(400).send({ error: 'malformatted parameters' });
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const dailyExercises = rawExercises.map((num: unknown) => Number(num));
 
-  if (dailyExercises.some(isNaN)) {
-    return res.status(400).send({ error: 'malformatted parameters' });
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+  if (dailyExercises.some(isNaN) || isNaN(Number(target))) {
+    res.status(400).send({ error: 'malformatted parameters' });
+    return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const result = calculateExercises(dailyExercises, Number(target));
   return res.json(result);
 });
 
-const PORT = 3003;
+const PORT = 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
