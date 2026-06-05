@@ -6,10 +6,13 @@ import type {
 import diaryService from './diaryService';
 import Diary from './components/Diary';
 import AddNewEntry from './components/AddNewEntry';
+import axios from 'axios';
+import ErrorNotif from './components/ErrorNotif';
 
 const App = () => {
   const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([]);
   const [isAdding, setIsAdding] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchDiaries = async () => {
@@ -21,24 +24,36 @@ const App = () => {
   }, []);
 
   const handleAddNew = async (object: NewDiaryEntry) => {
-    const response = await diaryService.add(object);
-
-    setDiaries(diaries.concat(response.data));
+    try {
+      const response = await diaryService.add(object);
+      setDiaries(diaries.concat(response.data));
+      setIsAdding(false);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error.response);
+        setErrorMessage('Failed to add entry: ' + error.message);
+        setTimeout(() => setErrorMessage(''), 5000);
+      } else {
+        console.error(error);
+        setErrorMessage('An unexpected error occurred');
+        setTimeout(() => setErrorMessage(''), 5000);
+      }
+    }
   };
 
   const handleCancelAdding = () => setIsAdding(false);
 
   return (
     <div>
-      {isAdding ? null : (
-        <button onClick={() => setIsAdding(true)}>Add new</button>
-      )}
+      {errorMessage && <ErrorNotif message={errorMessage} />}
       {isAdding ? (
         <AddNewEntry
           handleCreateNew={handleAddNew}
           handleCancelAdding={handleCancelAdding}
         />
-      ) : null}
+      ) : (
+        <button onClick={() => setIsAdding(true)}>Add new</button>
+      )}
       <h1>My flight diary</h1>
       <ol>
         {diaries.map((diary) => (

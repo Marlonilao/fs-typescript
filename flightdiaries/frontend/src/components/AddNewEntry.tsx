@@ -50,36 +50,38 @@ const AddNewEntry = ({
         </label>
       </div>
       <div>
-        <label>
-          Weather
-          <select
-            value={weather}
-            onChange={(e) => setWeather(e.target.value as Weather)}
-          >
-            <option value=''>-- select weather --</option>
-            {Object.values(Weather).map((w) => (
-              <option key={w} value={w}>
-                {w}
-              </option>
-            ))}
-          </select>
-        </label>
+        <fieldset>
+          <legend>Weather</legend>
+          {Object.values(Weather).map((w) => (
+            <label key={w}>
+              <input
+                type='radio'
+                name='weather'
+                value={w}
+                checked={weather === w}
+                onChange={(e) => setWeather(e.target.value as Weather)}
+              />
+              {w}
+            </label>
+          ))}
+        </fieldset>
       </div>
       <div>
-        <label>
-          Visibility
-          <select
-            value={visibility}
-            onChange={(e) => setVisibility(e.target.value as Visibility)}
-          >
-            <option value=''>-- select visibility --</option>
-            {Object.values(Visibility).map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </label>
+        <fieldset>
+          <legend>Visibility</legend>
+          {Object.values(Visibility).map((v) => (
+            <label key={v}>
+              <input
+                type='radio'
+                name='visibility'
+                value={v}
+                checked={visibility === v}
+                onChange={(e) => setVisibility(e.target.value as Visibility)}
+              />
+              {v}
+            </label>
+          ))}
+        </fieldset>
       </div>
       <div>
         <label>
