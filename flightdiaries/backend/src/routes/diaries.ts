@@ -9,10 +9,18 @@ import { newDiaryParser, errorMiddleware } from '../middleware.ts';
 
 const router = express.Router();
 
-router.get('/', (_req, res: Response<NonSensitiveDiaryEntry[]>) => {
-  const data = diaryService.getNonSensitiveEntries();
+router.get('/', (_req, res) => {
+  const data = diaryService.getEntries();
   res.send(data);
 });
+
+router.get(
+  '/nonSensitiveEntries',
+  (_req, res: Response<NonSensitiveDiaryEntry[]>) => {
+    const data = diaryService.getNonSensitiveEntries();
+    res.send(data);
+  },
+);
 
 router.get('/:id', (req, res) => {
   const diary = diaryService.findById(Number(req.params.id));
