@@ -28,15 +28,19 @@ export interface PatientEntry extends NewPatientEntry {
   id: string;
 }
 
-// export interface PatientsEntry {
-//   id: string;
-//   name: string;
-//   dateOfBirth: string;
-//   ssn: string;
-//   gender: Gender;
-//   occupation: string;
-// }
-
 export type NonSensitivePatientsEntry = Omit<PatientEntry, 'ssn'>;
 
-// export type NewPatientEntry = Omit<PatientsEntry, 'id'>;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface Entry {}
+
+export interface Patient {
+  id: string;
+  name: string;
+  ssn: string;
+  occupation: string;
+  gender: Gender;
+  dateOfBirth: string;
+  entries: Entry[];
+}
+
+export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;

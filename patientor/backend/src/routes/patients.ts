@@ -2,6 +2,7 @@ import express, { type Response } from 'express';
 import {
   getNonsensitivePatients,
   addPatient,
+  getPatientInfo,
 } from '../services/patientsService.ts';
 import type { NonSensitivePatientsEntry } from '../types.ts';
 import { NewPatientSchema } from '../types.ts';
@@ -24,6 +25,19 @@ patientsRouter.post('/', (req, res) => {
     } else {
       res.status(400).send({ error: 'unknown error' });
     }
+  }
+});
+
+patientsRouter.get('/:id', (req, res) => {
+  try {
+    const patient = getPatientInfo(req.params.id);
+    res.json(patient);
+  } catch (error: unknown) {
+    let errMessage = 'Something went wrong.';
+    if (error instanceof Error) {
+      errMessage += 'Error: ' + error.message;
+    }
+    res.status(400).send(errMessage);
   }
 });
 
