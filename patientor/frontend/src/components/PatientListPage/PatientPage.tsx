@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import patientService from '../../services/patients';
 import type { Patient } from '../../types';
+import Entry from './Entry';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +32,15 @@ const PatientPage = () => {
         <p>SSN: {patient.ssn}</p>
         <p>Occupation: {patient.occupation}</p>
         <p>Date of Birth: {patient.dateOfBirth}</p>
+
+        <div>
+          <h2>Entries</h2>
+          {patient.entries.length > 0 ? (
+            patient.entries.map((entry) => <Entry entry={entry} />)
+          ) : (
+            <p>No entries yet</p>
+          )}
+        </div>
       </div>
     );
   }
