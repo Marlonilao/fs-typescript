@@ -1,6 +1,6 @@
-import type { DiagnosesEntry } from '../src/types.ts';
+import type { Diagnosis } from '../src/types.ts';
 
-const diagnosesEntries: DiagnosesEntry[] = [
+const diagnosesEntries: Diagnosis[] = [
   {
     code: 'M24.2',
     name: 'Disorder of ligament',

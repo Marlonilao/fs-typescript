@@ -1,6 +1,6 @@
 import diagnosesEntries from '../../data/diagnosesData.ts';
-import type { DiagnosesEntry } from '../types.ts';
+import type { Diagnosis } from '../types.ts';
 
-export const getDiagnoses = (): DiagnosesEntry[] => {
+export const getDiagnoses = (): Diagnosis[] => {
   return diagnosesEntries;
 };

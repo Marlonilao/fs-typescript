@@ -4,13 +4,13 @@ import {
   addPatient,
   getPatientInfo,
 } from '../services/patientsService.ts';
-import type { NonSensitivePatientsEntry } from '../types.ts';
+import type { NonSensitivePatient } from '../types.ts';
 import { NewPatientSchema } from '../types.ts';
 import { z } from 'zod';
 
 const patientsRouter = express.Router();
 
-patientsRouter.get('/', (_req, res: Response<NonSensitivePatientsEntry[]>) => {
+patientsRouter.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
   res.send(getNonsensitivePatients());
 });
 
