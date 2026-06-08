@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import patientService from '../../services/patients';
-import type { Patient } from '../../types';
+import type { Diagnosis, Patient } from '../../types';
 import Entry from './Entry';
 
-const PatientPage = () => {
+const PatientPage = ({ diagnosis }: { diagnosis: Diagnosis[] }) => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient | null>(null);
 
@@ -12,15 +12,11 @@ const PatientPage = () => {
     const fetchPatient = async () => {
       const patient = await patientService.getPatientInfo(id!);
       setPatient(patient);
-      if (patient) {
-        console.log('Success fetching patient info');
-      }
     };
 
     fetchPatient();
     return () => {
       setPatient(null);
-      console.log('set patient to null');
     };
   }, [id]);
 
@@ -36,7 +32,9 @@ const PatientPage = () => {
         <div>
           <h2>Entries</h2>
           {patient.entries.length > 0 ? (
-            patient.entries.map((entry) => <Entry entry={entry} />)
+            patient.entries.map((entry) => (
+              <Entry entry={entry} key={entry.id} diagnosis={diagnosis} />
+            ))
           ) : (
             <p>No entries yet</p>
           )}

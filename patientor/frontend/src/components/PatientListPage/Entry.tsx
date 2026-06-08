@@ -1,6 +1,14 @@
-import type { Entry } from '../../types';
+import type { Entry, Diagnosis } from '../../types';
 
-const Entry = ({ entry }: { entry: Entry }) => {
+const Entry = ({
+  entry,
+  diagnosis,
+}: {
+  entry: Entry;
+  diagnosis: Diagnosis[];
+}) => {
+  const getByCode = (code: string) => diagnosis.find((d) => d.code === code);
+
   return (
     <div>
       <p>
@@ -9,7 +17,9 @@ const Entry = ({ entry }: { entry: Entry }) => {
       {entry.diagnosisCodes ? (
         <ul>
           {entry.diagnosisCodes?.map((code) => (
-            <li key={code}>{code}</li>
+            <li key={code}>
+              {code} {getByCode(code)?.name}
+            </li>
           ))}
         </ul>
       ) : null}
