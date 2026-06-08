@@ -1,4 +1,7 @@
 import type { Entry, Diagnosis } from '../../types';
+import { assertNever } from '../../utils';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import Box from '@mui/material/Box';
 
 const Entry = ({
   entry,
@@ -9,22 +12,88 @@ const Entry = ({
 }) => {
   const getByCode = (code: string) => diagnosis.find((d) => d.code === code);
 
-  return (
-    <div>
-      <p>
-        {entry.date} {entry.description}
-      </p>
-      {entry.diagnosisCodes ? (
-        <ul>
-          {entry.diagnosisCodes?.map((code) => (
-            <li key={code}>
-              {code} {getByCode(code)?.name}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </div>
-  );
+  switch (entry.type) {
+    case 'HealthCheck':
+      return (
+        <Box sx={{ p: 2, border: '1px solid grey', mb: 1, borderRadius: 2 }}>
+          <p>
+            {entry.date}: {entry.description}
+          </p>
+          {entry.diagnosisCodes ? (
+            <ul>
+              {entry.diagnosisCodes?.map((code) => (
+                <li key={code}>
+                  {code} {getByCode(code)?.name}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {entry.healthCheckRating === 0 && (
+            <FavoriteIcon sx={{ color: '#4caf50' }} />
+          )}
+          {entry.healthCheckRating === 1 && (
+            <FavoriteIcon sx={{ color: '#ffc107' }} />
+          )}
+          {entry.healthCheckRating === 2 && (
+            <FavoriteIcon sx={{ color: '#f44336' }} />
+          )}
+          <p>
+            Diagnose by <em>{entry.specialist}</em>
+          </p>
+        </Box>
+      );
+    case 'Hospital':
+      return (
+        <Box sx={{ p: 2, border: '1px solid grey', mb: 1, borderRadius: 2 }}>
+          <p>
+            {entry.date}: {entry.description}
+          </p>
+          {entry.diagnosisCodes ? (
+            <ul>
+              {entry.diagnosisCodes?.map((code) => (
+                <li key={code}>
+                  {code} {getByCode(code)?.name}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          <p>Discharge Date: {entry.discharge.date}</p>
+          <p>Criteria: {entry.discharge.criteria}</p>
+          <p>
+            Diagnose by <em>{entry.specialist}</em>
+          </p>
+        </Box>
+      );
+    case 'OccupationalHealthcare':
+      return (
+        <Box sx={{ p: 2, border: '1px solid grey', mb: 1, borderRadius: 2 }}>
+          <p>
+            {entry.date}: {entry.description}
+          </p>
+          {entry.diagnosisCodes ? (
+            <ul>
+              {entry.diagnosisCodes?.map((code) => (
+                <li key={code}>
+                  {code} {getByCode(code)?.name}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          <p>Employer: {entry.employerName}</p>
+          {entry.sickLeave && (
+            <p>
+              Sick Leave: {entry.sickLeave.startDate} –{' '}
+              {entry.sickLeave.endDate}
+            </p>
+          )}
+          <p>
+            Diagnose by <em>{entry.specialist}</em>
+          </p>
+        </Box>
+      );
+    default:
+      return assertNever(entry);
+  }
 };
 
 export default Entry;
