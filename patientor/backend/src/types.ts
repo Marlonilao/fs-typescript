@@ -47,10 +47,17 @@ export interface BaseEntry {
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis['code']>;
+  diagnosisCodes?: Array<Diagnosis['code']> | undefined;
 }
 
-const HealthCheckRating = {
+const NewBaseEntrySchema = z.object({
+  description: z.string(),
+  date: z.iso.date(),
+  specialist: z.string(),
+  diagnosisCodes: z.array(z.string()).optional(),
+});
+
+export const HealthCheckRating = {
   Healthy: 0,
   LowRisk: 1,
   HighRisk: 2,
@@ -65,6 +72,16 @@ export interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
+export const NewHealthCheckEntry = NewBaseEntrySchema.extend({
+  type: z.literal('HealthCheck'),
+  healthCheckRating: z.union([
+    z.literal(HealthCheckRating.Healthy),
+    z.literal(HealthCheckRating.LowRisk),
+    z.literal(HealthCheckRating.HighRisk),
+    z.literal(HealthCheckRating.CriticalRisk),
+  ]),
+});
+
 interface Discharge {
   date: string;
   criteria: string;
@@ -75,6 +92,14 @@ export interface HospitalEntry extends BaseEntry {
   discharge: Discharge;
 }
 
+export const NewHospitalEntry = NewBaseEntrySchema.extend({
+  type: z.literal('Hospital'),
+  discharge: z.object({
+    date: z.iso.date(),
+    criteria: z.string(),
+  }),
+});
+
 interface sickLeave {
   startDate: string;
   endDate: string;
@@ -83,8 +108,27 @@ interface sickLeave {
 export interface OccupationalHealthcareEntry extends BaseEntry {
   type: 'OccupationalHealthcare';
   employerName: string;
-  sickLeave?: sickLeave;
+  sickLeave?: sickLeave | undefined;
 }
+
+export const NewOccupationalHealthcareEntry = NewBaseEntrySchema.extend({
+  type: z.literal('OccupationalHealthcare'),
+  employerName: z.string(),
+  sickLeave: z
+    .object({
+      startDate: z.iso.date(),
+      endDate: z.iso.date(),
+    })
+    .optional(),
+});
+
+export const NewEntrySchema = z.discriminatedUnion('type', [
+  NewHealthCheckEntry,
+  NewHospitalEntry,
+  NewOccupationalHealthcareEntry,
+]);
+
+export type NewEntry = z.infer<typeof NewEntrySchema>;
 
 export type Entry =
   | HospitalEntry

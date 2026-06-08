@@ -3,6 +3,8 @@ import type {
   NonSensitivePatient,
   NewPatientEntry,
   Patient,
+  NewEntry,
+  Entry,
 } from '../types.ts';
 import { v1 as uuid } from 'uuid';
 
@@ -40,4 +42,19 @@ export const getPatientInfo = (id: string): Patient => {
   return {
     ...patient,
   };
+};
+
+export const addEntryToPatient = (id: string, entry: NewEntry): Entry => {
+  const newEntry = {
+    id: uuid(),
+    ...entry,
+  };
+
+  const patient = patientsEntries.find((patient) => patient.id === id);
+  if (!patient) {
+    throw new Error('Missing patient/wrong id');
+  }
+
+  patient.entries.push(newEntry);
+  return newEntry;
 };
