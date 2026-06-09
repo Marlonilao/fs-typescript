@@ -29,13 +29,16 @@ const Entry = ({
             </ul>
           ) : null}
           {entry.healthCheckRating === 0 && (
-            <FavoriteIcon sx={{ color: '#4caf50' }} />
+            <FavoriteIcon sx={{ color: '#22C55E' }} />
           )}
           {entry.healthCheckRating === 1 && (
-            <FavoriteIcon sx={{ color: '#ffc107' }} />
+            <FavoriteIcon sx={{ color: '#EAB308' }} />
           )}
           {entry.healthCheckRating === 2 && (
-            <FavoriteIcon sx={{ color: '#f44336' }} />
+            <FavoriteIcon sx={{ color: '#F97316' }} />
+          )}
+          {entry.healthCheckRating === 3 && (
+            <FavoriteIcon sx={{ color: '#EF4444' }} />
           )}
           <p>
             Diagnose by <em>{entry.specialist}</em>
